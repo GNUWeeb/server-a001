@@ -8,6 +8,9 @@ ARG mainUserPassword=someuserpassword
 # Tell apt that DEBIAN_FRONTEND is noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Unminimize the ubuntu image first
+RUN yes | unminimize
+
 # Change root password, and create main user
 RUN echo "root:${rootPassword}" | chpasswd \
     && useradd -m ${mainUser} -s /bin/bash \
