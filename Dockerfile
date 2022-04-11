@@ -18,7 +18,7 @@ RUN echo "root:${rootPassword}" | chpasswd \
 
 # Install packages
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install software-properties-common ca-certificates vim \
+    && apt-get -y --no-install-recommends install software-properties-common ca-certificates vim ncurses-term \
     && apt-get -y --no-install-recommends install openssh-server
 
 # Mark port 22/tcp is to be exposed
