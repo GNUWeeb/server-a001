@@ -29,8 +29,18 @@ RUN apt-key adv --fetch-keys https://nginx.org/keys/nginx_signing.key \
     && apt-get update \
     && apt-get -y --no-install-recommends install openssh-server nginx
 
-# Mark port 22/tcp is to be exposed
-EXPOSE 22/tcp
+# Mark port 48589/tcp is to be exposed
+EXPOSE 48589/tcp
+
+# Apply SSH config and add public keys
+COPY etc/ssh/sshd_config /etc/ssh/sshd_config
+RUN rm -rf /root/.ssh /home/${mainUser}/.ssh
+COPY ssh_keys /root/.ssh
+COPY ssh_keys /home/${mainUser}/.ssh
+RUN chown -R root:root /root/.ssh \
+    && chmod -R 600 /root/.ssh \
+    && chown -R ${mainUser}:${mainUser} /home/${mainUser}/.ssh \
+    && chmod -R 600 /home/${mainUser}/.ssh
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
