@@ -12,7 +12,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN yes | unminimize
 
 # Install base packages
-RUN apt-get update && apt-get -y --no-install-recommends install ca-certificates gnupg htop ncurses-term vim software-properties-common sudo wget
+RUN apt-get update && apt-get -y --no-install-recommends install ca-certificates gnupg htop ncurses-term vim software-properties-common sudo wget net-tools
 
 # Change root password, and create main user
 RUN echo "root:${rootPassword}" | chpasswd \
