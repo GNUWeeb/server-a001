@@ -27,7 +27,7 @@ COPY apt-sources/* /etc/apt/sources.list.d
 # Install server components
 RUN apt-key adv --fetch-keys https://nginx.org/keys/nginx_signing.key \
     && apt-get update \
-    && apt-get -y --no-install-recommends install openssh-server nginx
+    && apt-get -y --no-install-recommends install openssh-server nginx mysql-server
 
 # Mark port 48589/tcp is to be exposed
 EXPOSE 48589/tcp
