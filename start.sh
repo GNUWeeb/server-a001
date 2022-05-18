@@ -3,9 +3,11 @@ set -e;
 
 HOSTNAME="gnuweeb.org";
 CONTAINER_NAME="server-a001-ct";
-MYSQL_DATA_DIR="$(readlink -e "./storage/mysql_data")";
+MYSQL_DATA_DIR="./storage/mysql_data";
 
 mkdir -pv "$MYSQL_DATA_DIR";
+
+MYSQL_DATA_DIR="$(readlink -e "${MYSQL_DATA_DIR}")";
 
 CMD="$1";
 
