@@ -55,3 +55,27 @@ EOF
 
 chown -v postfix:postfix /etc/postfix/mysql_mailbox_maps.cf
 chmod -v 0600 /etc/postfix/mysql_mailbox_maps.cf
+
+
+
+#
+# Dovecot
+#
+install -dv -m 0750 -o dovecot -g postfix /var/spool/postfix/dovecot
+cp -v ./dovecot/dovecot.conf /etc/dovecot/
+
+echo "ssl_cert = <${MAIL_SSL_CERT}" >> /etc/dovecot/dovecot.conf
+echo "ssl_key = <${MAIL_SSL_KEY}" >> /etc/dovecot/dovecot.conf
+
+# MySQL auth maps
+cat << EOF > /etc/dovecot/mysql_auth.conf
+driver = mysql
+connect = "host=${DB_HOST} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASS}"
+default_pass_scheme = SHA512-CRYPT
+password_query = SELECT username AS user, password \
+                 FROM users \
+                 WHERE username='%n'
+EOF
+
+chown -v dovecot:dovecot /etc/dovecot/mysql_auth.conf
+chmod -v 0600 /etc/dovecot/mysql_auth.conf
