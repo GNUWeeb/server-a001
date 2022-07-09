@@ -20,6 +20,7 @@ groupadd -g 5000 vmail
 useradd -g vmail -u 5000 vmail -d /var/mail
 install -v -d -m 0750 -o vmail -g vmail /var/vmail
 adduser postfix opendkim
+adduser postfix opendmarc
 
 
 
@@ -100,3 +101,22 @@ UMask            002
 EOF
 
 cp -v ./opendkim/opendkim.service /lib/systemd/system/opendkim.service
+
+
+
+#
+# OpenDMARC
+#
+install -dv -m 0750 -o opendmarc -g postfix /var/spool/postfix/opendmarc
+
+cat << EOF > /etc/opendmarc.conf
+PidFile                    /run/opendmarc/opendmarc.pid
+PublicSuffixList           /usr/share/publicsuffix/public_suffix_list.dat
+Socket                     local:/var/spool/postfix/opendmarc/opendmarc.sock
+RejectFailures             true
+IgnoreAuthenticatedClients true
+UMask                      002
+UserID                     opendmarc
+EOF
+
+cp -v ./opendmarc/opendmarc.service /lib/systemd/system/opendmarc.service

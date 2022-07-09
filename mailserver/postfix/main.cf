@@ -58,7 +58,7 @@ virtual_gid_maps = static:5000
 # Milter
 milter_default_action = accept
 milter_protocol = 6
-smtpd_milters = unix:opendkim/opendkim.sock
+smtpd_milters = unix:opendkim/opendkim.sock, unix:opendmarc/opendmarc.sock
 non_smtpd_milters = $smtpd_milters
 
 

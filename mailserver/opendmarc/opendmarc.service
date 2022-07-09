@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenDMARC Milter
+After=network.target nss-lookup.target
+
+[Service]
+Type=forking
+User=opendmarc
+Group=postfix
+ExecStart=/usr/sbin/opendmarc
+ExecReload=/bin/kill -USR1 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
