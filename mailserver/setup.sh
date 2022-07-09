@@ -9,6 +9,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 MAIL_SSL_KEY="/var/keys/ssl/privkey.pem"
 MAIL_SSL_CERT="/var/keys/ssl/fullchain.pem"
+DKIM_KEY="/var/keys/dkim/${DKIM_SELECTOR}.private"
 
 
 
@@ -18,6 +19,7 @@ MAIL_SSL_CERT="/var/keys/ssl/fullchain.pem"
 groupadd -g 5000 vmail
 useradd -g vmail -u 5000 vmail -d /var/mail
 install -v -d -m 0750 -o vmail -g vmail /var/vmail
+adduser postfix opendkim
 
 
 
@@ -79,3 +81,22 @@ EOF
 
 chown -v dovecot:dovecot /etc/dovecot/mysql_auth.conf
 chmod -v 0600 /etc/dovecot/mysql_auth.conf
+
+
+
+#
+# OpenDKIM
+#
+install -dv -m 0750 -o opendkim -g postfix /var/spool/postfix/opendkim
+
+cat << EOF > /etc/opendkim.conf
+Domain           ${MAIL_HOST}
+Selector         ${DKIM_SELECTOR}
+KeyFile          ${DKIM_KEY}
+Socket           local:/var/spool/postfix/opendkim/opendkim.sock
+Syslog           Yes
+Canonicalization relaxed/simple
+UMask            002
+EOF
+
+cp -v ./opendkim/opendkim.service /lib/systemd/system/opendkim.service
