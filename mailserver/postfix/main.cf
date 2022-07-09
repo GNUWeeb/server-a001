@@ -68,7 +68,8 @@ smtpd_recipient_restrictions = permit_mynetworks,
 			       reject_non_fqdn_recipient,
 			       reject_unknown_recipient_domain,
 			       reject_unlisted_recipient,
-			       reject_unauth_destination
+			       reject_unauth_destination,
+			       check_policy_service unix:private/spf
 smtpd_sender_restrictions = permit_mynetworks,
 			    permit_sasl_authenticated,
 			    reject_non_fqdn_sender,
