@@ -30,7 +30,7 @@ RUN apt-key adv --fetch-keys https://nginx.org/keys/nginx_signing.key \
     && apt-get -y --no-install-recommends install openssh-server nginx mysql-server
 
 # Mark port 48589/tcp is to be exposed
-EXPOSE 48589/tcp
+EXPOSE 48589/tcp 25/tcp 25/tcp 465/tcp 587/tcp 143/tcp 993/tcp
 
 # Apply SSH config and add public keys
 COPY etc/ssh/sshd_config /etc/ssh/sshd_config
@@ -41,6 +41,15 @@ RUN chown -R root:root /root/.ssh \
     && chmod -R 600 /root/.ssh \
     && chown -R ${mainUser}:${mainUser} /home/${mainUser}/.ssh \
     && chmod -R 600 /home/${mainUser}/.ssh
+
+
+# Mailserver
+RUN apt update \
+    && apt -y --no-install-recommends install postfix postfix-mysql postfix-policyd-spf-python dovecot-core dovecot-imapd dovecot-lmtpd dovecot-mysql opendkim opendmarc
+
+COPY mailserver /root/mailserver
+RUN --mount=type=secret,required=true,id=config /root/mailserver/setup.sh
+
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
