@@ -1,5 +1,7 @@
 #!/bin/sh
 
+chown -v root:root /var/keys
+
 service ssh start
 service nginx start
 service mysql start
