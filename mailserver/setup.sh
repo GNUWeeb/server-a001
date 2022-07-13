@@ -82,6 +82,7 @@ EOF
 
 chown -v dovecot:dovecot /etc/dovecot/mysql_auth.conf
 chmod -v 0600 /etc/dovecot/mysql_auth.conf
+cp -v ./dovecot/dovecot /etc/init.d/dovecot
 
 
 
