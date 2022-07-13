@@ -2,6 +2,7 @@
 
 chown -v root:root /var/keys
 
+service rsyslog start
 service ssh start
 service nginx start
 service mysql start
