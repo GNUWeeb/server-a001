@@ -1,0 +1,15 @@
+MAIN_USER="user"
+
+# Database
+DB_HOST="127.0.0.1"
+DB_NAME="mailserver"
+DB_USER="vmail"
+DB_PASS="vmail"
+
+# Public inbox
+MAIL_HOST="test-s002.gnuweeb.og"
+MAIL_RELAY_HOST="vger-test.gnuweeb.org"
+MAIL_RELAY_USER="gwml"
+
+# Dkim
+DKIM_SELECTOR="default"
