@@ -101,8 +101,6 @@ Canonicalization relaxed/simple
 UMask            002
 EOF
 
-cp -v ./opendkim/opendkim.service /lib/systemd/system/opendkim.service
-
 
 
 #
@@ -119,5 +117,3 @@ IgnoreAuthenticatedClients true
 UMask                      002
 UserID                     opendmarc
 EOF
-
-cp -v ./opendmarc/opendmarc.service /lib/systemd/system/opendmarc.service
