@@ -15,7 +15,7 @@ RUN yes | unminimize
 RUN apt-get update && apt-get -y --no-install-recommends install \
     ca-certificates gnupg htop ncurses-term vim \
     software-properties-common sudo wget net-tools rsyslog \
-    openssh-server nginx mysql-server
+    openssh-server nginx mysql-server python3 pip screen git
 
 # Change root password, and create main user
 RUN echo "root:${rootPassword}" | chpasswd \
