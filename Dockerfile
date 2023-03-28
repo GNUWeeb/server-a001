@@ -41,10 +41,11 @@ RUN apt update \
        postfix-policyd-spf-python dovecot-core dovecot-imapd \
        dovecot-lmtpd dovecot-mysql opendkim opendmarc
 
+COPY init /bin/gwinitd
 COPY mailserver /root/mailserver
 RUN --mount=type=secret,required=true,id=config /root/mailserver/setup.sh
-
+RUN chmod -v +x /bin/gwinitd
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
-CMD [ "tail", "-f", "/dev/null" ]
+CMD [ "/bin/gwinitd" ]
