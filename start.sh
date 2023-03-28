@@ -3,24 +3,28 @@ set -e;
 
 HOSTNAME="gnuweeb.org";
 CONTAINER_NAME="server-a001-ct";
-MYSQL_DATA_DIR="./storage/mysql_data";
-KEYS_DIR="./storage/keys";
-VMAIL_DIR="./storage/vmail";
-EXTRA_DIR="./storage/extra";
-
-SSL_KEYS_DIR="./storage/ssl";
-DKIM_KEYS_DIR="./storage/dkim";
+MYSQL_DATA_DIR="./storage/var/lib/mysql";
+KEYS_DIR="./storage/var/keys";
+VMAIL_DIR="./storage/var/vmail";
+EXTRA_DIR="./storage/root/extra";
+WWW_DIR="./storage/var/www";
+NGINX_DIR="./storage/etc/nginx";
 
 mkdir -pv "${MYSQL_DATA_DIR}";
-mkdir -pv "${KEYS_DIR}/ssl";
-mkdir -pv "${KEYS_DIR}/dkim";
+mkdir -pv "${KEYS_DIR}";
 mkdir -pv "${VMAIL_DIR}";
 mkdir -pv "${EXTRA_DIR}";
+mkdir -pv "${WWW_DIR}";
+mkdir -pv "${NGINX_DIR}";
 
 MYSQL_DATA_DIR="$(readlink -e "${MYSQL_DATA_DIR}")";
 KEYS_DIR="$(readlink -e "${KEYS_DIR}")";
-VMAIL_DIR="$(readlink -e ${VMAIL_DIR})";
-EXTRA_DIR="$(readlink -e ${EXTRA_DIR})";
+VMAIL_DIR="$(readlink -e "${VMAIL_DIR}")";
+EXTRA_DIR="$(readlink -e "${EXTRA_DIR}")";
+WWW_DIR="$(readlink -e "${WWW_DIR}")";
+NGINX_DIR="$(readlink -e "${NGINX_DIR}")";
+
+COMMON_MOUNT_OPT="volume-driver=local,volume-opt=type=none,volume-opt=o=bind";
 
 CMD="$1";
 
@@ -34,10 +38,12 @@ if [[ "${CMD}" == "run" ]]; then
         --name "${CONTAINER_NAME}" \
         --privileged \
         --hostname "${HOSTNAME}" \
-        --mount "type=volume,dst=/var/keys,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${KEYS_DIR}" \
-        --mount "type=volume,dst=/var/lib/mysql,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${MYSQL_DATA_DIR}" \
-        --mount "type=volume,dst=/var/vmail,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${VMAIL_DIR}" \
-        --mount "type=volume,dst=/root/extra,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${EXTRA_DIR}" \
+        --mount "${COMMON_MOUNT_OPT},dst=/var/keys,volume-opt=device=${KEYS_DIR}" \
+        --mount "${COMMON_MOUNT_OPT},dst=/var/lib/mysql,volume-opt=device=${MYSQL_DATA_DIR}" \
+        --mount "${COMMON_MOUNT_OPT},dst=/var/vmail,volume-opt=device=${VMAIL_DIR}" \
+        --mount "${COMMON_MOUNT_OPT},dst=/root/extra,volume-opt=device=${EXTRA_DIR}" \
+        --mount "${COMMON_MOUNT_OPT},dst=/var/www,volume-opt=device=${WWW_DIR}" \
+        --mount "${COMMON_MOUNT_OPT},dst=/etc/nginx,volume-opt=device=${NGINX_DIR}" \
         --tty \
         --interactive \
         --detach \
