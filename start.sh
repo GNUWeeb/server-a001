@@ -5,16 +5,19 @@ HOSTNAME="gnuweeb.org";
 CONTAINER_NAME="server-a001-ct";
 MYSQL_DATA_DIR="./storage/mysql_data";
 KEYS_DIR="./storage/keys";
+VMAIL_DIR="./storage/vmail";
 
 SSL_KEYS_DIR="./storage/ssl";
 DKIM_KEYS_DIR="./storage/dkim";
 
-mkdir -pv "$MYSQL_DATA_DIR";
+mkdir -pv "${MYSQL_DATA_DIR}";
 mkdir -pv "${KEYS_DIR}/ssl";
 mkdir -pv "${KEYS_DIR}/dkim";
+mkdir -pv "${VMAIL_DIR}";
 
 MYSQL_DATA_DIR="$(readlink -e "${MYSQL_DATA_DIR}")";
 KEYS_DIR="$(readlink -e "${KEYS_DIR}")";
+VMAIL_DIR="$(readlink -e ${VMAIL_DIR})";
 
 CMD="$1";
 
@@ -30,6 +33,7 @@ if [[ "${CMD}" == "run" ]]; then
         --hostname "${HOSTNAME}" \
         --mount "type=volume,dst=/var/keys,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${KEYS_DIR}" \
         --mount "type=volume,dst=/var/lib/mysql,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${MYSQL_DATA_DIR}" \
+        --mount "type=volume,dst=/var/vmail,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=${VMAIL_DIR}" \
         --tty \
         --interactive \
         --detach \
