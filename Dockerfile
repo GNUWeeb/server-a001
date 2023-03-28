@@ -2,7 +2,7 @@ FROM ubuntu:jammy as base
 
 # Build args
 ARG rootPassword=somerootpassword
-ARG mainUser=user
+ARG mainUser=ubuntu
 ARG mainUserPassword=someuserpassword
 
 # Tell apt that DEBIAN_FRONTEND is noninteractive
