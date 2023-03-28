@@ -45,7 +45,8 @@ RUN chown -R root:root /root/.ssh \
 RUN apt update \
     && apt -y --no-install-recommends install postfix postfix-mysql \
        postfix-policyd-spf-python dovecot-core dovecot-imapd \
-       dovecot-lmtpd dovecot-mysql opendkim opendmarc
+       dovecot-lmtpd dovecot-mysql opendkim opendmarc spamc \
+       spamassassin
 
 COPY init /bin/gwinitd
 COPY mailserver /root/mailserver
