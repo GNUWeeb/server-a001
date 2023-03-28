@@ -1,4 +1,4 @@
-FROM ubuntu:focal as base
+FROM ubuntu:jammy as base
 
 # Build args
 ARG rootPassword=somerootpassword
