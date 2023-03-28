@@ -15,7 +15,13 @@ RUN yes | unminimize
 RUN apt-get update && apt-get -y --no-install-recommends install \
     ca-certificates gnupg htop ncurses-term vim \
     software-properties-common sudo wget net-tools rsyslog \
-    openssh-server nginx mysql-server python3 pip screen git
+    openssh-server nginx mysql-server python3 pip screen git \
+    liburi-perl libplack-perl libtimedate-perl \
+    libdbd-sqlite3-perl libsearch-xapian-perl libinline-c-perl \
+    libemail-address-xs-perl libparse-recdescent-perl \
+    libmail-imapclient-perl libplack-middleware-reverseproxy-perl \
+    libhighlight-perl xapian-tools liblinux-inotify2-perl \
+    libnet-server-perl libdbi-perl libsocket6-perl libcrypt-cbc-perl -y
 
 # Change root password, and create main user
 RUN echo "root:${rootPassword}" | chpasswd \
