@@ -12,7 +12,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN yes | unminimize
 
 # Install base packages
-RUN apt-get update && apt-get -y --no-install-recommends install ca-certificates gnupg htop ncurses-term vim software-properties-common sudo wget net-tools rsyslog
+RUN apt-get update && apt-get -y --no-install-recommends install \
+    ca-certificates gnupg htop ncurses-term vim \
+    software-properties-common sudo wget net-tools rsyslog \
+    openssh-server nginx mysql-server
 
 # Change root password, and create main user
 RUN echo "root:${rootPassword}" | chpasswd \
@@ -20,17 +23,6 @@ RUN echo "root:${rootPassword}" | chpasswd \
     && echo "${mainUser}:${mainUserPassword}" | chpasswd \
     && usermod -aG sudo ${mainUser} \
     && sed -i /etc/sudoers -re '/%sudo ALL=(ALL:ALL) ALL/s/^#//g'
-
-# Copy additional apt sources
-COPY apt-sources/* /etc/apt/sources.list.d
-
-# Install server components
-RUN apt-key adv --fetch-keys https://nginx.org/keys/nginx_signing.key \
-    && apt-get update \
-    && apt-get -y --no-install-recommends install openssh-server nginx mysql-server
-
-# Mark port 48589/tcp is to be exposed
-EXPOSE 48589/tcp 25/tcp 25/tcp 465/tcp 587/tcp 143/tcp 993/tcp
 
 # Apply SSH config and add public keys
 COPY etc/ssh/sshd_config /etc/ssh/sshd_config
@@ -45,7 +37,9 @@ RUN chown -R root:root /root/.ssh \
 
 # Mailserver
 RUN apt update \
-    && apt -y --no-install-recommends install postfix postfix-mysql postfix-policyd-spf-python dovecot-core dovecot-imapd dovecot-lmtpd dovecot-mysql opendkim opendmarc
+    && apt -y --no-install-recommends install postfix postfix-mysql \
+       postfix-policyd-spf-python dovecot-core dovecot-imapd \
+       dovecot-lmtpd dovecot-mysql opendkim opendmarc
 
 COPY mailserver /root/mailserver
 RUN --mount=type=secret,required=true,id=config /root/mailserver/setup.sh
